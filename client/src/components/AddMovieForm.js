@@ -4,12 +4,11 @@ import { Link } from 'react-router-dom';
 
 import axios from 'axios';
 
-const EditMovieForm = (props) => {
-	const { id } = useParams();
+const AddMovieForm = (props) => {
 	const { push } = useHistory();
 	
 
-	const { movies, setMovies } = props;
+	const { movies, setMovies, axiosCall } = props;
 
 
 	const [movie, setMovie] = useState({
@@ -19,22 +18,6 @@ const EditMovieForm = (props) => {
 		metascore: 0,
 		description: ""
 	});
-
-	useEffect( () => {
-		movies.map( item => {
-			if (item.id == id){
-				setMovie({
-					id: item.id,
-					title: item.title,
-					director: item.director,
-					genre: item.genre,
-					metascore: item.metascore,
-					description: item.description,
-				})
-			}
-
-		})
-	}, [])
 	
 	const handleChange = (e) => {
         setMovie({
@@ -45,14 +28,13 @@ const EditMovieForm = (props) => {
 
     const handleSubmit = (e) => {
 		e.preventDefault();
-		axios.put(`http://localhost:5000/api/movies/${id}`, movie)
+        console.log(movie)
+        
+		axios.post(`http://localhost:5000/api/movies/`, movie)
 		.then( res => console.log(res))
 		.catch( err => {console.log(err)})
-		setMovies({
-			...movies,
-			 [id]: movie
-		})
-		push(`../${id}`)
+        axiosCall();
+		push(`/movies`)
 	}
 	
 	const { title, director, genre, metascore, description } = movie;
@@ -96,4 +78,4 @@ const EditMovieForm = (props) => {
 	</div>);
 }
 
-export default EditMovieForm;
+export default AddMovieForm;
